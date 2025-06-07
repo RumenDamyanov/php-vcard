@@ -1,5 +1,8 @@
 <?php
 
+// Feature test for the VCardFacade in Laravel integration.
+// Verifies that static calls are forwarded to the VCard instance.
+
 use Rumenx\PhpVcard\Laravel\VCardFacade;
 use Rumenx\PhpVcard\VCard;
 

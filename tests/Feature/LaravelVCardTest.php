@@ -1,5 +1,8 @@
 <?php
 
+// Feature tests for Laravel integration of the VCard package.
+// These tests verify the ServiceProvider and container behavior.
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Illuminate\Container\Container;

@@ -1,5 +1,8 @@
 <?php
 
+// Unit tests for the VCard class.
+// These tests verify vCard generation, file saving, and advanced field support.
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Rumenx\PhpVcard\VCard;
