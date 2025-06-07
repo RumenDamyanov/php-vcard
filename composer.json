@@ -1,0 +1,47 @@
+{
+    "name": "rumenx/php-vcard",
+    "description": "Framework-agnostic PHP package to generate vCard files, with Laravel and Symfony support.",
+    "type": "library",
+    "homepage": "https://github.com/RumenDamyanov/php-vcard",
+    "keywords": ["vcard", "contacts", "laravel", "symfony", "php", "addressbook"],
+    "support": {
+        "issues": "https://github.com/RumenDamyanov/php-vcard/issues",
+        "source": "https://github.com/RumenDamyanov/php-vcard"
+    },
+    "require": {
+        "php": "^8.3 || ^8.4"
+    },
+    "minimum-stability": "stable",
+    "require-dev": {
+        "pestphp/pest": "^2.0",
+        "illuminate/container": "^12.17",
+        "illuminate/support": "^12.17"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Rumenx\\PhpVcard\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Rumenx\\PhpVcard\\Laravel\\VCardServiceProvider"
+            ],
+            "aliases": {
+                "VCard": "Rumenx\\PhpVcard\\Laravel\\VCardFacade"
+            }
+        }
+    },
+    "authors": [
+        {
+            "name": "Rumen Damyanov",
+            "email": "contact@rumenx.com"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}

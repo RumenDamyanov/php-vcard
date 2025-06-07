@@ -1,0 +1,7 @@
+vendor/
+coverage/
+composer.lock
+.vscode/
+.github/c*.md
+.DS_Store
+.phpunit.result.cache
