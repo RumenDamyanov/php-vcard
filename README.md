@@ -1,7 +1,7 @@
 # php-vcard
 
 [![Build Status](https://github.com/RumenDamyanov/php-vcard/actions/workflows/tests.yml/badge.svg)](https://github.com/RumenDamyanov/php-vcard/actions)
-[![codecov](https://codecov.io/gh/RumenDamyanov/php-vcard/branch/main/graph/badge.svg)](https://codecov.io/gh/RumenDamyanov/php-vcard)
+[![codecov](https://codecov.io/gh/RumenDamyanov/php-vcard/graph/badge.svg?token=WKgaDnpzJC)](https://codecov.io/gh/RumenDamyanov/php-vcard)
 
 A framework-agnostic PHP package to generate vCard files (compatible with iPhone, Android, Gmail, iCloud, etc.), with out-of-the-box support for Laravel and Symfony.
 
@@ -98,10 +98,4 @@ $response = new Response(
 
 ## License
 
-MIT
-
----
-
-**Author:** Rumen Damyanov (<contact@rumenx.com>)
-
-[GitHub Repository](https://github.com/RumenDamyanov/php-vcard)
+This project is licensed under the [MIT License](LICENSE.md).
