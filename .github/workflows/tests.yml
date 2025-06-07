@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
       - name: Run tests
-        run: ./vendor/bin/pest --coverage --min=100
+        run: ./vendor/bin/pest --coverage --coverage-clover=coverage.xml --min=100
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
