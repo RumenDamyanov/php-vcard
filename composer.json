@@ -9,28 +9,18 @@
         "source": "https://github.com/RumenDamyanov/php-vcard"
     },
     "require": {
-        "php": "^8.3 || ^8.4"
+        "php": ">=8.3"
     },
     "minimum-stability": "stable",
     "require-dev": {
         "pestphp/pest": "^2.0",
-        "illuminate/container": "^12.17",
-        "illuminate/support": "^12.17"
+        "phpstan/phpstan": "^1.0",
+        "friendsofphp/php-cs-fixer": "^3.0"
     },
     "license": "MIT",
     "autoload": {
         "psr-4": {
             "Rumenx\\PhpVcard\\": "src/"
-        }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Rumenx\\PhpVcard\\Laravel\\VCardServiceProvider"
-            ],
-            "aliases": {
-                "VCard": "Rumenx\\PhpVcard\\Laravel\\VCardFacade"
-            }
         }
     },
     "authors": [
@@ -43,5 +33,19 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true
         }
+    },
+    "scripts": {
+        "test": "pest",
+        "test-coverage": "pest --coverage",
+        "test-coverage-html": "pest --coverage --coverage-html coverage",
+        "test-coverage-min": "pest --coverage --min=90",
+        "analyse": "phpstan analyse",
+        "format": "php-cs-fixer fix",
+        "format-dry": "php-cs-fixer fix --dry-run --diff",
+        "ci": [
+            "@test-coverage-min",
+            "@analyse",
+            "@format-dry"
+        ]
     }
 }
