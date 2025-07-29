@@ -11,7 +11,7 @@ namespace Rumenx\PhpVcard;
 class VCard
 {
     /**
-     * @var array vCard fields and their values
+     * @var array<string, string> vCard fields and their values
      */
     private array $fields = [];
 
