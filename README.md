@@ -24,7 +24,7 @@ composer require rumenx/php-vcard
 ### Basic Usage
 
 ```php
-use rumenx\VCard\VCard;
+use Rumenx\PhpVcard\VCard;
 
 $vcard = new VCard();
 $vcard->addName('Jon', 'Snow');
@@ -44,25 +44,13 @@ $content = $vcard->toString();
 ```php
 use Rumenx\PhpVcard\VCard;
 
-// Option 1: Dependency Injection (recommended)
-Route::get('/vcard', function (VCard $vcard) {
+Route::get('/vcard', function () {
+    $vcard = new VCard();
     $vcard->addName('Arya', 'Stark');
     $vcard->addEmail('arya@example.com');
     $vcard->addPhone('+1987654321');
+
     return response($vcard->toString(), 200, [
-        'Content-Type' => 'text/vcard',
-        'Content-Disposition' => 'attachment; filename="arya_stark.vcf"',
-    ]);
-});
-
-// Option 2: Facade
-use VCard;
-
-Route::get('/vcard-facade', function () {
-    VCard::addName('Arya', 'Stark');
-    VCard::addEmail('arya@example.com');
-    VCard::addPhone('+1987654321');
-    return response(VCard::toString(), 200, [
         'Content-Type' => 'text/vcard',
         'Content-Disposition' => 'attachment; filename="arya_stark.vcf"',
     ]);
@@ -90,11 +78,51 @@ $response = new Response(
 );
 ```
 
+## Framework Integration
+
+This package follows a **simple, framework-agnostic approach** by design. Unlike packages that require special adapters, service providers, or complex integrations, php-vcard works out-of-the-box with any PHP framework or plain PHP project.
+
+**Why no special adapters?**
+- **Simplicity**: Just instantiate `new VCard()` - no magic, no hidden complexity
+- **Universal compatibility**: Works with Laravel, Symfony, CodeIgniter, or any PHP framework
+- **Easy debugging**: No framework-specific layers to troubleshoot
+- **Minimal maintenance**: No need to maintain separate adapters for different frameworks
+- **Standard PHP**: Uses only basic PHP features (strings, arrays, file operations)
+
+This approach makes the package more reliable, easier to understand, and ensures it will continue working across different framework versions without requiring updates.
+
 ## Testing
 
 ```bash
-./vendor/bin/pest --coverage
+# Run tests
+composer test
+
+# Run tests with coverage
+composer test-coverage
+
+# Generate HTML coverage report
+composer test-coverage-html
 ```
+
+## Contributing
+
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to contribute to this project.
+
+## Security
+
+For security vulnerabilities, please see our [Security Policy](SECURITY.md).
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for release history and changes.
+
+## Support
+
+If you find this package useful, please consider:
+- ⭐ Starring the repository
+- 💖 [Sponsoring the project](FUNDING.md)
+- 🐛 Reporting issues
+- 📖 Contributing to documentation
 
 ## License
 
