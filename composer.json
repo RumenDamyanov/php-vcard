@@ -4,12 +4,27 @@
     "type": "library",
     "homepage": "https://github.com/RumenDamyanov/php-vcard",
     "keywords": ["vcard", "contacts", "laravel", "symfony", "php", "addressbook"],
+    "authors": [
+        {
+            "name": "Rumen Damyanov",
+            "email": "contact@rumenx.com",
+            "role": "Developer",
+            "homepage": "https://rumenx.com"
+        }
+    ],
     "support": {
         "issues": "https://github.com/RumenDamyanov/php-vcard/issues",
-        "source": "https://github.com/RumenDamyanov/php-vcard"
+        "source": "https://github.com/RumenDamyanov/php-vcard",
+        "wiki": "https://github.com/RumenDamyanov/php-vcard/wiki"
     },
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/RumenDamyanov"
+        }
+    ],
     "require": {
-        "php": ">=8.3"
+        "php": "^8.2"
     },
     "minimum-stability": "stable",
     "require-dev": {
@@ -23,12 +38,6 @@
             "Rumenx\\PhpVcard\\": "src/"
         }
     },
-    "authors": [
-        {
-            "name": "Rumen Damyanov",
-            "email": "contact@rumenx.com"
-        }
-    ],
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true
