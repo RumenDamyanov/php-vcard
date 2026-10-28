@@ -11,7 +11,7 @@ namespace Rumenx\PhpVcard;
 class VCard
 {
     /**
-     * @var array<string, string> vCard fields and their values
+     * @var array<string, string> vCard fields and their escaped values
      */
     private array $fields = [];
 
@@ -20,8 +20,9 @@ class VCard
      */
     public function addName(string $firstName, string $lastName): self
     {
-        $this->fields['N'] = "$lastName;$firstName";
-        $this->fields['FN'] = "$firstName $lastName";
+        $this->fields['N'] = $this->joinComponents([$lastName, $firstName]);
+        $this->fields['FN'] = $this->escapeText($firstName . ' ' . $lastName);
+
         return $this;
     }
 
@@ -30,8 +31,7 @@ class VCard
      */
     public function addEmail(string $email): self
     {
-        $this->fields['EMAIL'] = $email;
-        return $this;
+        return $this->setText('EMAIL', $email);
     }
 
     /**
@@ -39,8 +39,7 @@ class VCard
      */
     public function addPhone(string $phone): self
     {
-        $this->fields['TEL'] = $phone;
-        return $this;
+        return $this->setText('TEL', $phone);
     }
 
     /**
@@ -48,7 +47,8 @@ class VCard
      */
     public function addAddress(string $street, string $city, string $state, string $zip, string $country): self
     {
-        $this->fields['ADR'] = ";;$street;$city;$state;$zip;$country";
+        $this->fields['ADR'] = ';;' . $this->joinComponents([$street, $city, $state, $zip, $country]);
+
         return $this;
     }
 
@@ -57,7 +57,10 @@ class VCard
      */
     public function addOrganization(string $organization, ?string $unit = null): self
     {
-        $this->fields['ORG'] = $unit ? "$organization;$unit" : $organization;
+        $this->fields['ORG'] = $unit === null || $unit === ''
+            ? $this->escapeText($organization)
+            : $this->joinComponents([$organization, $unit]);
+
         return $this;
     }
 
@@ -66,8 +69,7 @@ class VCard
      */
     public function addTitle(string $title): self
     {
-        $this->fields['TITLE'] = $title;
-        return $this;
+        return $this->setText('TITLE', $title);
     }
 
     /**
@@ -75,8 +77,7 @@ class VCard
      */
     public function addUrl(string $url): self
     {
-        $this->fields['URL'] = $url;
-        return $this;
+        return $this->setUri('URL', $url);
     }
 
     /**
@@ -84,8 +85,7 @@ class VCard
      */
     public function addNote(string $note): self
     {
-        $this->fields['NOTE'] = $note;
-        return $this;
+        return $this->setText('NOTE', $note);
     }
 
     /**
@@ -93,8 +93,7 @@ class VCard
      */
     public function addBirthday(string $date): self
     {
-        $this->fields['BDAY'] = $date;
-        return $this;
+        return $this->setText('BDAY', $date);
     }
 
     /**
@@ -102,8 +101,7 @@ class VCard
      */
     public function addPhoto(string $url): self
     {
-        $this->fields['PHOTO'] = $url;
-        return $this;
+        return $this->setUri('PHOTO', $url);
     }
 
     /**
@@ -114,8 +112,12 @@ class VCard
      */
     public function addCustom(string $key, string $value): self
     {
-        $this->fields[strtoupper($key)] = $value;
-        return $this;
+        $name = strtoupper($key);
+        if (preg_match('/^[A-Z0-9-]+$/', $name) !== 1) {
+            throw new \InvalidArgumentException('The vCard property name is not a valid token.');
+        }
+
+        return $this->setText($name, $value);
     }
 
     /**
@@ -128,9 +130,10 @@ class VCard
             'VERSION:3.0',
         ];
         foreach ($this->fields as $key => $value) {
-            $lines[] = "$key:$value";
+            $lines[] = $this->foldLine($key . ':' . $value);
         }
         $lines[] = 'END:VCARD';
+
         return implode("\r\n", $lines) . "\r\n";
     }
 
@@ -139,6 +142,82 @@ class VCard
      */
     public function saveToFile(string $filename): void
     {
-        file_put_contents($filename, $this->toString());
+        if ($filename === '' || str_contains($filename, "\0")) {
+            throw new \InvalidArgumentException('The vCard filename is empty or contains a NUL byte.');
+        }
+
+        if (file_put_contents($filename, $this->toString()) === false) {
+            throw new \RuntimeException('Unable to write the vCard file.');
+        }
+    }
+
+    private function setText(string $name, string $value): self
+    {
+        $this->fields[$name] = $this->escapeText($value);
+
+        return $this;
+    }
+
+    private function setUri(string $name, string $value): self
+    {
+        if (preg_match('/[\x00-\x1F\x7F]/', $value) === 1) {
+            throw new \InvalidArgumentException('The vCard URI contains a control character.');
+        }
+
+        $this->fields[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Escape a vCard 3.0 TEXT value (RFC 2426).
+     */
+    private function escapeText(string $value): string
+    {
+        $value = str_replace('\\', '\\\\', $value);
+        $value = str_replace(',', '\\,', $value);
+        $value = str_replace(';', '\\;', $value);
+
+        return str_replace(["\r\n", "\r", "\n"], '\\n', $value);
+    }
+
+    /**
+     * @param list<string> $parts
+     */
+    private function joinComponents(array $parts): string
+    {
+        return implode(';', array_map($this->escapeText(...), $parts));
+    }
+
+    /**
+     * Fold a content line at 75 octets without splitting a UTF-8 character.
+     */
+    private function foldLine(string $line): string
+    {
+        if (strlen($line) <= 75) {
+            return $line;
+        }
+
+        $parts = [];
+        $offset = 0;
+        $limit = 75;
+        $length = strlen($line);
+
+        while ($offset < $length) {
+            $take = min($limit, $length - $offset);
+            if ($offset + $take < $length) {
+                while ($take > 0 && (ord($line[$offset + $take]) & 0xC0) === 0x80) {
+                    --$take;
+                }
+                if ($take === 0) {
+                    $take = 1;
+                }
+            }
+            $parts[] = substr($line, $offset, $take);
+            $offset += $take;
+            $limit = 74;
+        }
+
+        return implode("\r\n ", $parts);
     }
 }

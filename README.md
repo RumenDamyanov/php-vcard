@@ -15,9 +15,13 @@ A framework-agnostic PHP package to generate vCard files (compatible with iPhone
 
 ## Installation
 
+Requires **PHP 8.3** or newer.
+
 ```bash
 composer require rumenx/php-vcard
 ```
+
+Text values are escaped for vCard 3.0. Commas, semicolons, backslashes, and newlines in a name, note, or other text field stay inside that field. URLs reject control characters instead of being rewritten.
 
 ## Usage
 

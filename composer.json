@@ -24,12 +24,12 @@
         }
     ],
     "require": {
-        "php": "^8.2"
+        "php": "^8.3"
     },
     "minimum-stability": "stable",
     "require-dev": {
-        "pestphp/pest": "^2.0 || ^3.0 || ^4.0",
-        "phpstan/phpstan": "^1.0 || ^2.0",
+        "pestphp/pest": "^4.0",
+        "phpstan/phpstan": "^2.0",
         "friendsofphp/php-cs-fixer": "^3.0"
     },
     "license": "MIT",
@@ -47,7 +47,7 @@
         "test": "pest",
         "test-coverage": "pest --coverage",
         "test-coverage-html": "pest --coverage --coverage-html coverage",
-        "test-coverage-min": "pest --coverage --min=90",
+        "test-coverage-min": "pest --coverage --min=100",
         "analyse": "phpstan analyse",
         "format": "php-cs-fixer fix",
         "format-dry": "php-cs-fixer fix --dry-run --diff",
